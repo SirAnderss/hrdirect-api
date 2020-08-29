@@ -15,7 +15,6 @@ class AuthController extends Controller
   {
     $credentials = request()->validate(['email' => 'required|email', 'password' => 'required|string|max:25']);
     if (!$token = auth()->attempt($credentials)) {
-      // dd($token);
       return $this->respondUnAuthorizedRequest(ApiCode::INVALID_CREDENTIALS);
     }
 
@@ -28,24 +27,24 @@ class AuthController extends Controller
       'token' => $token,
       'access_type' => 'bearer',
       'expires_in' => auth()->factory()->getTTL() * 60
-    ], "Login Successful");
+    ], "Login Successful", ApiCode::OK);
   }
 
 
   public function logout()
   {
     auth()->logout();
-    return $this->respondWithMessage('User successfully logged out');
+    return $this->respondWithMessage(ApiCode::OK, 'User successfully logged out');
   }
 
 
   public function refresh()
   {
-    return $this->respondWithToken(auth()->refresh());
+    return $this->respondWithToken(auth()->refresh(), null, ApiCode::OK,);
   }
 
   public function me()
   {
-    return $this->respond(auth()->user());
+    return $this->respond(auth()->user(), null, ApiCode::OK,);
   }
 }

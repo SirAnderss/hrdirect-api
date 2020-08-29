@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RegistrationRequest;
 use App\User;
+use App\ApiCode;
 
 class RegistrationController extends Controller
 {
@@ -17,6 +18,6 @@ class RegistrationController extends Controller
   {
     User::create($request->getAttributes())->sendEmailVerificationNotification();
 
-    return $this->respondWithMessage('User successfully created');
+    return $this->respondWithMessage(ApiCode::OK, 'User successfully created');
   }
 }

@@ -49,6 +49,6 @@ class VerificationController extends Controller
 
     auth()->user()->sendEmailVerificationNotification();
 
-    return $this->respondWithMessage("Email verification link sent on your email id");
+    return $this->respondWithMessage(ApiCode::OK, "Email verification link sent on your email id");
   }
 }

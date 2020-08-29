@@ -13,14 +13,14 @@ class Controller extends BaseController
   use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
 
-  public function respond($data, $msg = null)
+  public function respond($data, $msg = null, $api_code)
   {
-    return ResponseBuilder::asSuccess()->withData($data)->withMessage($msg)->build();
+    return ResponseBuilder::asSuccess($api_code)->withData($data)->withMessage($msg)->build();
   }
 
-  public function respondWithMessage($msg)
+  public function respondWithMessage($api_code, $msg)
   {
-    return ResponseBuilder::asSuccess()->withMessage($msg)->build();
+    return ResponseBuilder::asSuccess($api_code)->withMessage($msg)->build();
   }
 
   public function respondWithError($api_code, $http_code)

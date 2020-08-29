@@ -6,7 +6,6 @@ use App\ApiCode;
 use App\Http\Requests\ResetPasswordRequest;
 use Illuminate\Support\Facades\Password;
 
-
 class ForgotPasswordController extends Controller
 {
   public function forgot()
@@ -15,7 +14,7 @@ class ForgotPasswordController extends Controller
 
     Password::sendResetLink($credentials);
 
-    return $this->respondWithMessage('Reset password link sent on your email id.');
+    return $this->respondWithMessage(ApiCode::OK, 'Reset password link sent on your email id.');
   }
 
 
@@ -30,6 +29,6 @@ class ForgotPasswordController extends Controller
       return $this->respondBadRequest(ApiCode::INVALID_RESET_PASSWORD_TOKEN);
     }
 
-    return $this->respondWithMessage("Password has been successfully changed");
+    return $this->respondWithMessage(ApiCode::OK, "Password has been successfully changed");
   }
 }

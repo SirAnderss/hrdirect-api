@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\ApiCode;
+
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -17,6 +19,6 @@ class UserController extends Controller
 
     auth()->user()->update($attributes);
 
-    return $this->respondWithMessage("User successfully updated");
+    return $this->respondWithMessage(ApiCode::OK, "User successfully updated");
   }
 }
