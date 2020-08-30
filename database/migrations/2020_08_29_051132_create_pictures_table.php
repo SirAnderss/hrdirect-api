@@ -15,7 +15,7 @@ class CreatePicturesTable extends Migration
   {
     Schema::create('pictures', function (Blueprint $table) {
       $table->uuid('id')->primary();
-      $table->bigInteger('picture_link');
+      $table->string('picture_link', 100);
       $table->bigInteger('picture_type_id')->unsigned();
       $table->uuid('profile_id');
       // $table->timestamps();

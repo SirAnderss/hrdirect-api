@@ -2,10 +2,15 @@
 
 namespace App;
 
+use \App\Http\Traits\UsesUuid;
+
 use Illuminate\Database\Eloquent\Model;
 
 class Picture extends Model
 {
+  use UsesUuid;
+
+  public $incrementing = false;
 
   public $timestamps = false;
 

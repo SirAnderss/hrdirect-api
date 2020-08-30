@@ -17,7 +17,7 @@ class CreateProfilesTable extends Migration
       $table->uuid('id')->primary();
       $table->string('name', 70);
       $table->string('slug', 70);
-      $table->string('address', 30);
+      $table->string('address', 100);
       $table->text('description', 500);
       $table->uuid('user_id');
       $table->softDeletes();

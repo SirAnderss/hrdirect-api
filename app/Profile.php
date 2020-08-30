@@ -3,12 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use \App\Http\Traits\UsesUuid;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Profile extends Model
 {
   use SoftDeletes;
+  use UsesUuid;
 
   /**
    * Get the user that owns the profile.

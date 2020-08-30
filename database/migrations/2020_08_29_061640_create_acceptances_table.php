@@ -15,8 +15,8 @@ class CreateAcceptancesTable extends Migration
   {
     Schema::create('acceptances', function (Blueprint $table) {
       $table->id();
-      $table->integer('rating')->unsigned();
-      $table->decimal('avg_rating', 2, 2)->unsigned();
+      $table->tinyInteger('rating')->unsigned();
+      $table->double('avg_rating', 5, 2)->unsigned();
       $table->uuid('profile_id');
       $table->uuid('user_id');
       $table->timestamps();

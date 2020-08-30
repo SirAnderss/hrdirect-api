@@ -3,10 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use \App\Http\Traits\UsesUuid;
 
 class Acceptance extends Model
 {
+  use UsesUuid;
 
+  public $incrementing = false;
   /**
    * Get the profile that owns the acceptance.
    */
