@@ -10,6 +10,8 @@ class Tag extends Model
 {
   use SoftDeletes;
 
+  protected $fillable = ['name'];
+
   /**
    * The profiles that belong to the tag.
    */

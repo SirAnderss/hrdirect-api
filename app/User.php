@@ -12,9 +12,7 @@ use \App\Http\Traits\UsesUuid;
 
 class User extends Authenticatable implements JWTSubject
 {
-  use SoftDeletes;
-  use Notifiable;
-  use UsesUuid;
+  use SoftDeletes, Notifiable, UsesUuid;
 
   public $incrementing = false;
 

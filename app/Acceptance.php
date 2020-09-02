@@ -10,6 +10,9 @@ class Acceptance extends Model
   use UsesUuid;
 
   public $incrementing = false;
+
+  protected $fillable = ['rating', 'avg_rating', 'profile_id', 'user_id'];
+
   /**
    * Get the profile that owns the acceptance.
    */

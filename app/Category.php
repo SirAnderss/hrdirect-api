@@ -9,10 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-  use SoftDeletes;
-  use UsesUuid;
+  use SoftDeletes, UsesUuid;
 
   public $incrementing = false;
+
+  protected $fillable = ['name', 'slug'];
 
   /**
    * The profiles that belong to the category.

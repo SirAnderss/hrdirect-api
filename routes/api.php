@@ -31,4 +31,5 @@ Route::middleware(['api'])->group(function ($router) {
   Route::post('password/reset', 'ForgotPasswordController@reset');
 
   Route::patch('user/profile', 'UserController@updateProfile');
+  Route::get('users', 'UserController@getUsers');
 });

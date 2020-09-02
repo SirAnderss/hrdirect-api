@@ -12,6 +12,8 @@ class Comment extends Model
 
   public $incrementing = false;
 
+  protected $fillable = ['comment', 'profile_id', 'user_id'];
+
   /**
    * Get the profile that owns the comment.
    */

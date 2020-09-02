@@ -12,7 +12,6 @@ class Controller extends BaseController
 {
   use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-
   public function respond($data, $msg = null, $api_code)
   {
     return ResponseBuilder::asSuccess($api_code)->withData($data)->withMessage($msg)->build();

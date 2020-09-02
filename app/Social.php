@@ -9,6 +9,8 @@ class Social extends Model
 
   public $timestamps = false;
 
+  protected $fillable = ['link', 'profile_id'];
+
   /**
    * Get the profile that owns the social.
    */

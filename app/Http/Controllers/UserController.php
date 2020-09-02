@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\ApiCode;
+use Illuminate\Support\Facades\Auth;
 
+use App\ApiCode;
+use App\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -17,8 +19,14 @@ class UserController extends Controller
   {
     $attributes = request()->validate(['name' => 'nullable|string']);
 
-    auth()->user()->update($attributes);
+    Auth::update($attributes);
 
     return $this->respondWithMessage(ApiCode::OK, "User successfully updated");
+  }
+
+  public function getUsers()
+  {
+    $users = User::paginate(5);
+    return $this->respond($users, null, ApiCode::OK);
   }
 }

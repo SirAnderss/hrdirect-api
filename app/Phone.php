@@ -9,6 +9,8 @@ class Phone extends Model
 
   public $timestamps = false;
 
+  protected $fillable = ['phone_number', 'phone_type_id'];
+
   /**
    * Get the phone_types that owns the phone.
    */

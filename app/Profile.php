@@ -9,8 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Profile extends Model
 {
-  use SoftDeletes;
-  use UsesUuid;
+  use SoftDeletes, UsesUuid;
+
+  protected $fillable = ['name', 'slug', 'address', 'description', 'user_id'];
 
   /**
    * Get the user that owns the profile.

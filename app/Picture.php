@@ -14,6 +14,8 @@ class Picture extends Model
 
   public $timestamps = false;
 
+  protected $fillable = ['picture_link', 'picture_type_id', 'profile_id'];
+
   /**
    * Get the picture_types that owns the picture.
    */
