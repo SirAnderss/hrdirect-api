@@ -17,6 +17,7 @@ class PictureSeeder extends Seeder
     // factory(\App\Picture::class, 300)->create();
 
     $profiles = App\Profile::all();
+    $num_images = rand(3, 6);
 
     foreach ($profiles as $profile) {
       DB::table('pictures')->insert(array(
@@ -37,25 +38,30 @@ class PictureSeeder extends Seeder
         2 =>
         array(
           'id' => Str::uuid(),
-          'picture_link' => $faker->imageUrl(600, 400, 'animals', true, 'Faker'),
-          'picture_type_id' => 3,
-          'profile_id' => $profile->id,
-        ),
-        3 =>
-        array(
-          'id' => Str::uuid(),
-          'picture_link' => $faker->imageUrl(600, 400, 'animals', true, 'Faker'),
-          'picture_type_id' => 3,
-          'profile_id' => $profile->id,
-        ),
-        4 =>
-        array(
-          'id' => Str::uuid(),
-          'picture_link' => $faker->imageUrl(600, 400, 'animals', true, 'Faker'),
-          'picture_type_id' => 4,
+          'picture_link' => $faker->imageUrl(200, 200, 'cats', true, 'Faker'),
+          'picture_type_id' => 5,
           'profile_id' => $profile->id,
         ),
       ));
+
+      for ($i = 0; $i < $num_images; $i++) {
+        DB::table('pictures')->insert(array(
+          0 =>
+          array(
+            'id' => Str::uuid(),
+            'picture_link' => $faker->imageUrl(600, 400, 'animals', true, 'Faker'),
+            'picture_type_id' => 3,
+            'profile_id' => $profile->id,
+          ),
+          1 =>
+          array(
+            'id' => Str::uuid(),
+            'picture_link' => $faker->imageUrl(600, 400, 'animals', true, 'Faker'),
+            'picture_type_id' => 4,
+            'profile_id' => $profile->id,
+          )
+        ));
+      }
     }
   }
 }

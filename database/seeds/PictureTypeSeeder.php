@@ -27,7 +27,11 @@ class PictureTypeSeeder extends Seeder
       ),
       3 =>
       array(
-        'name' => 'OTHER',
+        'name' => 'THUMBNAIL',
+      ),
+      4 =>
+      array(
+        'name' => 'THUMBNAIL_PROFILE',
       ),
     ));
   }

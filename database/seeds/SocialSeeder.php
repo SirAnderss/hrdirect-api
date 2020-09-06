@@ -17,33 +17,14 @@ class SocialSeeder extends Seeder
     $profiles = App\Profile::all();
 
     foreach ($profiles as $profile) {
-      DB::table('socials')->insert(array(
-        0 =>
-        array(
+      $num_socials = rand(3, 7);
+
+      for ($i = 0; $i < $num_socials; $i++) {
+        DB::table('socials')->insert(array(
           'link' => $faker->url,
           'profile_id' => $profile->id,
-        ),
-        1 =>
-        array(
-          'link' => $faker->url,
-          'profile_id' => $profile->id,
-        ),
-        2 =>
-        array(
-          'link' => $faker->url,
-          'profile_id' => $profile->id,
-        ),
-        3 =>
-        array(
-          'link' => $faker->url,
-          'profile_id' => $profile->id,
-        ),
-        4 =>
-        array(
-          'link' => $faker->url,
-          'profile_id' => $profile->id,
-        ),
-      ));
+        ));
+      }
     }
   }
 }

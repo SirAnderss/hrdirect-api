@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Auth;
 
 use App\ApiCode;
@@ -46,6 +47,12 @@ class AuthController extends Controller
 
   public function me()
   {
-    return $this->respond(Auth::user(), null, ApiCode::OK,);
+    $user = Auth::user();
+    $roles = array();
+    foreach ($user->roles as $role) {
+      array_push($roles, $role->pivot->role_id);
+    }
+
+    return $this->respond($user, null, ApiCode::OK,);
   }
 }

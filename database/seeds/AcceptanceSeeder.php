@@ -22,7 +22,7 @@ class AcceptanceSeeder extends Seeder
     }
 
     foreach ($users as $user) {
-      $num_acceptances = rand(1, 5);
+      $num_acceptances = rand(2, 15);
 
       for ($i = 0; $i < $num_acceptances; $i++) {
         $profile_rand = array_rand(array_flip($profile_arr), 1);

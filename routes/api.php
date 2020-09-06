@@ -19,17 +19,23 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::middleware(['api'])->group(function ($router) {
-  Route::post('login', 'AuthController@login');
-  Route::post('logout', 'AuthController@logout');
-  Route::post('refresh', 'AuthController@refresh');
-  Route::get('me', 'AuthController@me')->middleware('log.route');
+  Route::group(['v1'], function () {
+    Route::post('login', 'AuthController@login');
+    Route::post('logout', 'AuthController@logout');
+    Route::post('refresh', 'AuthController@refresh');
+    Route::get('me', 'AuthController@me')->middleware('log.route');
 
-  Route::post('register', 'RegistrationController@register');
-  Route::get('email/verify/{id}', 'VerificationController@verify')->name('verification.verify');
-  Route::get('email/resend', 'VerificationController@resend')->name('verification.resend');
-  Route::post('password/email', 'ForgotPasswordController@forgot');
-  Route::post('password/reset', 'ForgotPasswordController@reset');
+    Route::post('register', 'RegistrationController@register');
+    Route::get('email/verify/{id}', 'VerificationController@verify')->name('verification.verify');
+    Route::get('email/resend', 'VerificationController@resend')->name('verification.resend');
+    Route::post('password/email', 'ForgotPasswordController@forgot');
+    Route::post('password/reset', 'ForgotPasswordController@reset');
 
-  Route::patch('user/profile', 'UserController@updateProfile');
-  Route::get('users', 'UserController@getUsers');
+    Route::patch('user/profile', 'UserController@updateProfile');
+    Route::get('users', 'UserController@getUsers');
+
+    // Route::post('test', 'ProfileController@store');
+    // Route::post('social', 'SocialController@store');
+    Route::resource('test', 'ProfileController');
+  });
 });

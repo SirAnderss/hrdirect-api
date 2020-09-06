@@ -15,8 +15,8 @@ class ProfileSeeder extends Seeder
     $categories = App\Category::all();
     $tags = App\Tag::all();
     $phones = App\Phone::all();
-
     $profiles = App\Profile::all();
+
     $category_arr = array();
     $tag_arr = array();
     $phone_arr = array();
@@ -37,12 +37,15 @@ class ProfileSeeder extends Seeder
       $category_rand = array_rand(array_flip($category_arr), 3);
       $tag_rand = array_rand(array_flip($tag_arr), 7);
       $phone_rand = array_rand(array_flip($phone_arr), 2);
+
       foreach ($category_rand as $category_item) {
         $profile->categories()->attach($category_item);
       }
+
       foreach ($tag_rand as $tag_item) {
         $profile->tags()->attach($tag_item);
       }
+
       foreach ($phone_rand as $phone_item) {
         $profile->phones()->attach($phone_item);
       }

@@ -24,7 +24,7 @@ class CommentSeeder extends Seeder
     }
 
     foreach ($users as $user) {
-      $num_comments = rand(1, 5);
+      $num_comments = rand(2, 10);
 
       for ($i = 0; $i < $num_comments; $i++) {
         $profile_rand = array_rand(array_flip($profile_arr), 1);
