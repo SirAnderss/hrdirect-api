@@ -12,14 +12,20 @@ trait SocialManager
     try {
       foreach ($socials as $key => $social_item) {
 
-        // if (Social::where('link', $social_item)->exists()) {
-        //   $social = Social::where('link', $social_item)->get('id');
-        // } else {
+        if (Social::where('link', $social_item)->exists()) {
+          $social = Social::where('link', $social_item)->get();
+
+          foreach ($social as $key => $value) {
+            $value->link = $social_item;
+            $value->save();
+          }
+        } else {
           $social = new Social;
+
           $social->link = $social_item;
           $social->profile_id = $id;
           $social->save();
-        // }
+        }
       }
 
       return 'Success';

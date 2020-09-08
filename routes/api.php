@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::middleware(['api'])->group(function ($router) {
-  Route::group(['v1'], function () {
+  // Route::group(['v1'], function () {
     Route::post('login', 'AuthController@login');
     Route::post('logout', 'AuthController@logout');
     Route::post('refresh', 'AuthController@refresh');
@@ -34,8 +34,9 @@ Route::middleware(['api'])->group(function ($router) {
     Route::patch('user/profile', 'UserController@updateProfile');
     Route::get('users', 'UserController@getUsers');
 
-    // Route::post('test', 'ProfileController@store');
     // Route::post('social', 'SocialController@store');
-    Route::resource('test', 'ProfileController');
-  });
+    Route::resource('profiles', 'ProfileController')->except([
+      'create', 'edit'
+    ]);
+  // });
 });

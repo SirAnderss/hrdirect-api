@@ -5,8 +5,8 @@ namespace App\Http\Traits;
 use App\Picture;
 use Image;
 use File;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 trait FileUpload
 {
@@ -136,6 +136,37 @@ trait FileUpload
       Picture::create(['picture_link' => 'thumb_avatar.webp', 'picture_type_id' => 5, 'profile_id' => $profile_id]);
 
       return 'Success';
+    } catch (\Throwable $th) {
+      return 'Error';
+      //throw $th;
+    }
+  }
+
+  /**
+   * Set default avatar
+   */
+  protected function deleteImage($type, $name)
+  {
+    try {
+      switch ($type) {
+        case 'avatar':
+          if ($name != 'avatar.webp') {
+            Storage::delete($this->avatar_path . $name);
+          }
+          break;
+        case 'cover':
+          Storage::delete($this->cover_path . $name);
+          break;
+        case 'content':
+          Storage::delete($this->images_path . $name);
+          break;
+        case 'thumbs':
+          Storage::delete($this->thumbnail_path . $name);
+          break;
+
+        default:
+          break;
+      }
     } catch (\Throwable $th) {
       return 'Error';
       //throw $th;
