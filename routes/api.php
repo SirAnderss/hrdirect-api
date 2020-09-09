@@ -34,6 +34,8 @@ Route::middleware(['api'])->group(function ($router) {
     Route::patch('user/profile', 'UserController@updateProfile');
     Route::get('users', 'UserController@getUsers');
 
+    Route::post('images', 'PictureController@store');
+
     // Route::post('social', 'SocialController@store');
     Route::resource('profiles', 'ProfileController')->except([
       'create', 'edit'

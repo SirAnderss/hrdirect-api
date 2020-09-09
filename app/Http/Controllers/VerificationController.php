@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\ApiCode;
 use App\User;
+use App\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class VerificationController extends Controller
 {
@@ -33,6 +35,10 @@ class VerificationController extends Controller
       $user->markEmailAsVerified();
     }
 
+    $role = Role::where('name', 'REGISTERED')->get();
+
+    $user->roles()->attach($role[0]->id);
+
     return redirect()->to('/');
   }
 
@@ -43,11 +49,11 @@ class VerificationController extends Controller
    */
   public function resend()
   {
-    if (auth()->user()->hasVerifiedEmail()) {
+    if (Auth::user()->hasVerifiedEmail()) {
       return $this->respondBadRequest(ApiCode::EMAIL_ALREADY_VERIFIED);
     }
 
-    auth()->user()->sendEmailVerificationNotification();
+    Auth::user()->sendEmailVerificationNotification();
 
     return $this->respondWithMessage(ApiCode::OK, "Email verification link sent on your email id");
   }

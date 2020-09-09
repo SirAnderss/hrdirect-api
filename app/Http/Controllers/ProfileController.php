@@ -33,6 +33,7 @@ class ProfileController extends Controller
   {
     $this->middleware('auth:api'/*, ['except' => ['index', 'show']]*/);
   }
+
   /**
    * Display a listing of the resource.
    *
@@ -81,23 +82,29 @@ class ProfileController extends Controller
         */
 
         // Image profile
-        if (!empty($request->image_profile)) {
-          $avatar = $this->uploadImage($request->image_profile, 1, $id);
+        if (!empty($request->avatar_name)) {
+          $this->storeFileName($request->avatar_thumb_name, 5, $id);
+          $avatar = $this->storeFileName($request->avatar_name, 1, $id);
         } else {
           $avatar = $this->staticProfile($id);
         }
 
         // Cover profile image
-        if (!empty($request->cover_profile)) {
-          $cover = $this->uploadImage($request->cover_profile, 2, $id);
+        if (!empty($request->cover_name)) {
+          $this->storeFileName($request->cover_thumb_name, 4, $id);
+          $cover = $this->storeFileName($request->cover_name, 2, $id);
         } else {
           $cover = 'Empty';
         }
 
         // Content images
-        if (!empty($request->content_file)) {
-          foreach ($request->content_file as $key => $content_file) {
-            $content = $this->uploadImage($content_file, 3, $id);
+        if (!empty($request->content_files_name)) {
+          foreach ($request->content_files_name as $key => $content_file) {
+            $content = $this->storeFileName($content_file, 3, $id);
+          }
+
+          foreach ($request->content_thumbs_name as $key => $thumb_file) {
+            $this->storeFileName($thumb_file, 4, $id);
           }
         } else {
           $content = 'Empty';
@@ -131,8 +138,8 @@ class ProfileController extends Controller
 
         return $this->respond([
           'profile' => $new_profile . ' profile',
-          'cover_profile' => $cover . ' cover',
-          'image_profile' => $avatar . ' avatar',
+          'cover' => $cover . ' cover',
+          'avatar' => $avatar . ' avatar',
           'content_files' => $content . ' content',
           'tags' => $new_tags . ' tags',
           'categores' => $new_categories . ' categories',
@@ -224,8 +231,8 @@ class ProfileController extends Controller
         'comments' => $comments
       ], 'Get profile successfully', ApiCode::OK);
     } catch (\Throwable $th) {
-      return $th;
-      // return $this->respondServerInternalError(ApiCode::INTERNAL_SERVER_ERROR);
+      // return $th;
+      return $this->respondServerInternalError(ApiCode::INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -239,6 +246,7 @@ class ProfileController extends Controller
   public function update($id, ProfileRequest $request)
   {
     try {
+      // dd($id);
       $profile = $this->updateProfile($request, $id);
 
       $new_profile = $profile;
@@ -250,33 +258,45 @@ class ProfileController extends Controller
         */
 
         // Image profile
-        if (!empty($request->image_profile)) {
-          $old_avatar = Picture::where('profile_id', $id)->where('picture_type_id', 1);
+        if (!empty($request->avatar_name)) {
+          $avatar = Picture::where('profile_id', $id)->where('picture_type_id', 1)->get();
 
-          $avatar = $this->uploadImage($request->image_profile, 1, $id);
-          $this->deleteImage('avatar', $old_avatar[0]->picture_link);
+          $this->deleteImage('avatar', $avatar[0]->picture_link);
 
+          $avatar->picture_link = $request->avatar_name;
+          $avatar->save();
+
+          $thumb = Picture::where('profile_id', $id)->where('picture_type_id', 1)->get();
+          $thumb->picture_link = $request->avatar_thumb_name;
+          $thumb->save();
+
+          $avatar = 'Updated';
         } else {
           $avatar = 'Nothing to Update';
         }
 
         // Cover profile image
-        if (!empty($request->cover_profile)) {
-          $old_cover = Picture::where('profile_id', $id)->where('picture_type_id', 2);
-          $cover = $this->uploadImage($request->cover_profile, 2, $id);
-          $this->deleteImage('cover', $old_cover[0]->picture_link);
+        if (!empty($request->cover_name)) {
+          $cover = Picture::where('profile_id', $id)->where('picture_type_id', 1)->get();
+
+          $this->deleteImage('cover', $cover[0]->picture_link);
+
+          $cover->picture_link = $request->cover_name;
+          $cover->save();
+
+          $thumb = Picture::where('profile_id', $id)->where('picture_type_id', 1)->get();
+          $thumb->picture_link = $request->cover_thumb_name;
+          $thumb->save();
+
+          $cover = 'Updated';
         } else {
           $cover = 'Nothing to Update';
         }
 
         // Content images
-        if (!empty($request->content_file)) {
-          foreach ($request->content_file as $key => $content_file) {
-            $old_content = Picture::where('profile_id', $id)->where('picture_type_id', 3);
-
-            $content = $this->uploadImage($content_file, 3, $id);
-            $this->deleteImage('content', $old_content[0]->picture_link);
-          }
+        if (!empty($request->content_files_name)) {
+          $this->contentImage(3, $request->content_thumbs_name, $id);
+          $content = $this->contentImage(3, $request->content_files_name, $id);
         } else {
           $content = 'Nothing to Update';
         }
@@ -309,16 +329,16 @@ class ProfileController extends Controller
       }
       return $this->respond([
         'profile' => $new_profile . ' in profile',
-        'cover_profile' => $cover . ' in cover',
-        'image_profile' => $avatar . ' in avatar',
+        'cover' => $cover . ' in cover',
+        'avatar' => $avatar . ' in avatar',
         'content_files' => $content . ' in content',
         'tags' => $new_tags . ' in tags',
         'categores' => $new_categories . ' in categories',
         'phones' => $new_phones . ' in phones',
         'socials' => $new_socials . ' in socials'
-      ], "Profile created ", ApiCode::OK);
+      ], "Profile updated ", ApiCode::OK);
     } catch (\Throwable $th) {
-      return $th/*$this->respondServerInternalError(ApiCode::INTERNAL_SERVER_ERROR)*/;
+      return $this->respondServerInternalError(ApiCode::INTERNAL_SERVER_ERROR);
       //throw $th;
     }
   }

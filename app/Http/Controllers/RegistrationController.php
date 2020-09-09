@@ -16,8 +16,18 @@ class RegistrationController extends Controller
    */
   public function register(RegistrationRequest $request)
   {
-    User::create($request->getAttributes())->sendEmailVerificationNotification();
+    if (User::where('email', $request->email)->exists()) {
+      return $this->respondWithMessage(ApiCode::ALREADY_EXISTS, 'User already exists');
+    } else {
+      $user = new User;
+      $user->name = $request->name;
+      $user->email = $request->email;
+      $user->password = $request->password;
 
-    return $this->respondWithMessage(ApiCode::OK, 'User successfully created');
+      $user->save();
+      $user->sendEmailVerificationNotification();
+
+      return $this->respondWithMessage(ApiCode::OK, 'User successfully created');
+    }
   }
 }

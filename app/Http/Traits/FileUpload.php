@@ -66,12 +66,14 @@ trait FileUpload
   {
 
     Picture::create(['picture_link' => $file_name, 'picture_type_id' => $type, 'profile_id' => $id]);
+
+    return 'Success';
   }
 
   /**
    * Upload Image to storage and save on Db
    */
-  public function uploadImage($user_file, $type, $id)
+  public function uploadImage($user_file, $type)
   {
 
     $this->createDirecrotory();
@@ -89,38 +91,30 @@ trait FileUpload
         case '1':
           $image->save($this->avatar_path . $image_name);
 
-          $this->storeFileName($image_name, 1, $id);
-
           $thumb_name = $this->createThumb($image);
 
-          $this->storeFileName($thumb_name, 5, $id);
+          return ['img_name' => $image_name, 'thumb' => $thumb_name, 'type_img' => $type];
           break;
 
         case '2':
           $image->save($this->cover_path . $image_name);
 
-          $this->storeFileName($image_name, 2, $id);
-
           $thumb_name = $this->createThumb($image);
 
-          $this->storeFileName($thumb_name, 4, $id);
+          return ['img_name' => $image_name, 'thumb' => $thumb_name, 'type_img' => $type];
           break;
 
         case '3':
           $image->save($this->images_path . $image_name);
 
-          $this->storeFileName($image_name, 2, $id);
-
           $thumb_name = $this->createThumb($image);
 
-          $this->storeFileName($thumb_name, 4, $id);
+          return ['img_name' => $image_name, 'thumb' => $thumb_name, 'type_img' => $type];
           break;
 
         default:
           break;
       }
-
-      return 'Success';
     } catch (\Throwable $th) {
       return 'error';
     }
@@ -145,23 +139,93 @@ trait FileUpload
   /**
    * Set default avatar
    */
+  protected function contentImage($type, $name, $id)
+  {
+    $old_files = array();
+    $new_files = array();
+
+    try {
+
+      $old_content = Picture::where('profile_id', $id)->where('picture_type_id', 3)->get();
+
+      foreach ($old_content as $key => $old_value) {
+        array_push($old_files, $old_value->picture_link);
+      };
+
+      foreach ($name as $key => $content_file) {
+        array_push($new_files, $content_file);
+      }
+
+      $files_intersect = array_intersect($new_files, $old_files);
+      $files_to_insert = array_diff($new_files, $files_intersect);
+      $files_to_delete = array_diff($old_files, $files_intersect);
+
+      foreach ($files_to_insert as $key => $file_to_insert) {
+        $file = new Picture;
+        $file->picture_link = $file_to_insert;
+        $file->picture_type_id = 3;
+        $file->save();
+      }
+
+      switch ($type) {
+        case '3':
+          foreach ($files_to_delete as $key => $file_to_delete) {
+            $file = Picture::where('picture_link', $file_to_delete)->where('picture_type_id', 3)->get();
+            $destroy = Picture::find($file[0]->id);
+
+            $this->deleteImage('content', $file[0]->picture_link);
+            $destroy->delete();
+          }
+          break;
+        case '4':
+          foreach ($files_to_delete as $key => $file_to_delete) {
+            $file = Picture::where('picture_link', $file_to_delete)->where('picture_type_id', 4)->get();
+            $destroy = Picture::find($file[0]->id);
+
+            $this->deleteImage('thumbs', $file[0]->picture_link);
+            $destroy->delete();
+          }
+          break;
+
+        default:
+          break;
+      }
+
+      return 'Updated';
+    } catch (\Throwable $th) {
+      return 'Error';
+      //throw $th;
+    }
+  }
+
+  /**
+   * Set default avatar
+   */
   protected function deleteImage($type, $name)
   {
     try {
       switch ($type) {
         case 'avatar':
           if ($name != 'avatar.webp') {
-            Storage::delete($this->avatar_path . $name);
+            if (Storage::disk('local')->exists('public/images/avatars/' . $name)) {
+              Storage::delete($this->avatar_path . $name);
+            }
           }
           break;
         case 'cover':
-          Storage::delete($this->cover_path . $name);
+          if (Storage::disk('local')->exists('public/images/avatars/' . $name)) {
+            Storage::delete($this->cover_path . $name);
+          }
           break;
         case 'content':
-          Storage::delete($this->images_path . $name);
+          if (Storage::disk('local')->exists('public/images/avatars/' . $name)) {
+            Storage::delete($this->images_path . $name);
+          }
           break;
         case 'thumbs':
-          Storage::delete($this->thumbnail_path . $name);
+          if (Storage::disk('local')->exists('public/images/avatars/' . $name)) {
+            Storage::delete($this->thumbnail_path . $name);
+          }
           break;
 
         default:

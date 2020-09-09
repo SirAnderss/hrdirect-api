@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+  // return view('welcome');
   return ['Unauthorized' => 'You need to access to use this function'];
 });
 

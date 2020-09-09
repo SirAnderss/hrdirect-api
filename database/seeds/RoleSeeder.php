@@ -42,7 +42,7 @@ class RoleSeeder extends Seeder
       5 =>
       array(
         'id' => Str::uuid(),
-        'name' => 'GUEST',
+        'name' => 'REGISTERED',
       ),
     ));
 

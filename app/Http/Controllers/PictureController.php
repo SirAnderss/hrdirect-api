@@ -4,82 +4,127 @@ namespace App\Http\Controllers;
 
 use App\Picture;
 use Illuminate\Http\Request;
+use \App\Http\Traits\FileUpload;
+use App\ApiCode;
 
 class PictureController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
+
+  use FileUpload;
+
+  public function __construct()
+  {
+    $this->middleware('auth:api');
+  }
+
+  /**
+   * Display a listing of the resource.
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function index()
+  {
+    //
+  }
+
+  /**
+   * Show the form for creating a new resource.
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function create()
+  {
+    //
+  }
+
+  /**
+   * Store a newly created resource in storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @return \Illuminate\Http\Response
+   */
+  public function store(Request $request)
+  {
+    $avatar = $request->avatar;
+    $cover = $request->cover;
+    $content = $request->content;
+
+    if (!empty($avatar) && empty($cover) && empty($content)) {
+      $type = 1;
+    } else if (empty($avatar) && !empty($cover) && empty($content)) {
+      $type = 2;
+    } else if (empty($avatar) && empty($cover) && !empty($content)) {
+      $type = 3;
+    } else {
+      $type = null;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+    switch ($type) {
+      case '1':
+        $img_name = $this->uploadImage($avatar, $type);
+
+        return $this->respond($img_name, null, ApiCode::OK);
+        break;
+      case '2':
+        $img_name = $this->uploadImage($cover, $type);
+
+        return $this->respond($img_name, null, ApiCode::OK);
+        break;
+      case '3':
+        $img_name = $this->uploadImage($content, $type);
+
+        return $this->respond($img_name, null, ApiCode::OK);
+        break;
+      default:
+        return $this->respondWithError(ApiCode::BAD_REQUEST, 400);
+        break;
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+    return '';
+  }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Picture  $pictures
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Picture $pictures)
-    {
-        //
-    }
+  /**
+   * Display the specified resource.
+   *
+   * @param  \App\Picture  $pictures
+   * @return \Illuminate\Http\Response
+   */
+  public function show(Picture $pictures)
+  {
+    //
+  }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Picture  $pictures
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Picture $pictures)
-    {
-        //
-    }
+  /**
+   * Show the form for editing the specified resource.
+   *
+   * @param  \App\Picture  $pictures
+   * @return \Illuminate\Http\Response
+   */
+  public function edit(Picture $pictures)
+  {
+    //
+  }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Picture  $pictures
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Picture $pictures)
-    {
-        //
-    }
+  /**
+   * Update the specified resource in storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @param  \App\Picture  $pictures
+   * @return \Illuminate\Http\Response
+   */
+  public function update(Request $request, Picture $pictures)
+  {
+    //
+  }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Picture  $pictures
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Picture $pictures)
-    {
-        //
-    }
+  /**
+   * Remove the specified resource from storage.
+   *
+   * @param  \App\Picture  $pictures
+   * @return \Illuminate\Http\Response
+   */
+  public function destroy(Picture $pictures)
+  {
+    //
+  }
 }
