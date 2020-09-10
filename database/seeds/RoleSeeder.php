@@ -46,20 +46,20 @@ class RoleSeeder extends Seeder
       ),
     ));
 
-    // $roles = App\Role::all();
-    // $users = App\User::all();
-    // $arr = array();
+    $roles = App\Role::all();
+    $users = App\User::all();
+    $arr = array();
 
-    // foreach ($roles as $role) {
-    //   array_push($arr, $role->id);
-    // }
+    foreach ($roles as $role) {
+      array_push($arr, $role->id);
+    }
 
-    // foreach ($users as $user) {
-    //   $rand = array_rand(array_flip($arr), 3);
+    foreach ($users as $user) {
+      $rand = array_rand(array_flip($arr), 3);
 
-    //   foreach ($rand as $item) {
-    //     $user->roles()->attach($item);
-    //   }
-    // }
+      foreach ($rand as $item) {
+        $user->roles()->attach($item);
+      }
+    }
   }
 }

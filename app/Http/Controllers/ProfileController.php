@@ -23,15 +23,15 @@ use \App\Http\Traits\TagsManager;
 use \App\Http\Traits\CategoriesManager;
 use \App\Http\Traits\PhoneManager;
 use \App\Http\Traits\SocialManager;
+use \App\Http\Traits\CommentManager;
 
 class ProfileController extends Controller
 {
-
-  use FileUpload, TagsManager, CategoriesManager, PhoneManager, SocialManager;
+  use FileUpload, TagsManager, CategoriesManager, PhoneManager, SocialManager, CommentManager;
 
   public function __construct()
   {
-    $this->middleware('auth:api'/*, ['except' => ['index', 'show']]*/);
+    $this->middleware('auth:api', ['except' => ['index', 'show']]);
   }
 
   /**
@@ -57,7 +57,8 @@ class ProfileController extends Controller
 
       return $this->respond($profiles, 'Profiles listed successfully', ApiCode::OK);
     } catch (\Throwable $th) {
-      return $this->respondServerInternalError(ApiCode::INTERNAL_SERVER_ERROR);
+      return $this->respondBadRequest(ApiCode::BAD_REQUEST); //Chekar esto
+      // throw $th;
     }
   }
 
@@ -150,7 +151,7 @@ class ProfileController extends Controller
         return $this->respondWithMessage(ApiCode::ALREADY_EXISTS, 'Profile already exists');
       }
     } catch (\Throwable $th) {
-      return $this->respondServerInternalError(ApiCode::INTERNAL_SERVER_ERROR);
+      return $this->respondBadRequest(ApiCode::BAD_REQUEST);
       //throw $th;
     }
   }
@@ -161,9 +162,12 @@ class ProfileController extends Controller
    * @param  \App\Profile  $profile
    * @return \Illuminate\Http\Response
    */
-  public function show($id)
+  public function show($slug)
   {
     try {
+      $profile = Profile::where('slug', $slug)->get('id');
+
+      $id = $profile[0]->id;
       $info_profile = Profile::select(
         'profiles.id as id',
         'profiles.name as name',
@@ -175,21 +179,7 @@ class ProfileController extends Controller
 
       $pictures = Picture::select('picture_link', 'picture_type_id as picture_type')->where('profile_id', $id)->get();
 
-      $acceptances = Acceptance::join('users', 'users.id', '=', 'acceptances.user_id')
-        ->select(
-          'acceptances.rating as rating',
-          'users.name as username'
-        )
-        ->where('acceptances.profile_id', $id)
-        ->get();
-
-      $comments = Comment::join('users', 'users.id', '=', 'comments.user_id')
-        ->select(
-          'comments.comment as comment',
-          'users.name as username'
-        )
-        ->where('comments.profile_id', $id)
-        ->get();
+      $comments = $this->getComments($id);
 
       $socials = Social::select('link')->where('profile_id', $id)->get();
 
@@ -227,12 +217,11 @@ class ProfileController extends Controller
         'phones' => $phones,
         'pictures' => $pictures,
         'socials' => $socials,
-        'acceptances' => $acceptances,
         'comments' => $comments
       ], 'Get profile successfully', ApiCode::OK);
     } catch (\Throwable $th) {
-      // return $th;
-      return $this->respondServerInternalError(ApiCode::INTERNAL_SERVER_ERROR);
+      return $this->respondBadRequest(ApiCode::BAD_REQUEST);
+      // throw $th;
     }
   }
 
@@ -246,7 +235,6 @@ class ProfileController extends Controller
   public function update($id, ProfileRequest $request)
   {
     try {
-      // dd($id);
       $profile = $this->updateProfile($request, $id);
 
       $new_profile = $profile;
@@ -327,6 +315,7 @@ class ProfileController extends Controller
           $new_phones = 'Nothing to Update';
         }
       }
+
       return $this->respond([
         'profile' => $new_profile . ' in profile',
         'cover' => $cover . ' in cover',
@@ -338,7 +327,7 @@ class ProfileController extends Controller
         'socials' => $new_socials . ' in socials'
       ], "Profile updated ", ApiCode::OK);
     } catch (\Throwable $th) {
-      return $this->respondServerInternalError(ApiCode::INTERNAL_SERVER_ERROR);
+      return $this->respondBadRequest(ApiCode::BAD_REQUEST);
       //throw $th;
     }
   }
@@ -349,7 +338,7 @@ class ProfileController extends Controller
    * @param  \App\Profile  $profile
    * @return \Illuminate\Http\Response
    */
-  public function destroy($id)
+  public function destroy($id/*, CommentRequest $request*/)
   {
     $profile = Profile::findOrFail($id);
 

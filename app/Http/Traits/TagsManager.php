@@ -12,7 +12,8 @@ trait TagsManager
   {
     try {
       foreach ($tags as $key => $tag_item) {
-        $tag_slug = Str::slug($tag_item, '-');
+        $tag_name = Str::of($tag_item)->trim();
+        $tag_slug = Str::slug($tag_name, '-');
 
         if (Tag::where('slug', $tag_slug)->exists()) {
           $tag = Tag::where('slug', $tag_slug)->get('id');
@@ -20,7 +21,7 @@ trait TagsManager
           $item_profile->tags()->attach($tag[0]->id);
         } else {
           $tag = new Tag;
-          $tag->name = Str::lower($tag_item);
+          $tag->name = Str::lower($tag_name);
           $tag->slug = $tag_slug;
           $tag->save();
 
@@ -66,7 +67,8 @@ trait TagsManager
 
       // Insert new tags
       foreach ($tags_to_insert as $key => $tag_item) {
-        $tag_slug = Str::slug($tag_item, '-');
+        $tag_name = Str::of($tag_item)->trim();
+        $tag_slug = Str::slug($tag_name, '-');
 
         if (Tag::where('slug', $tag_slug)->exists()) {
           $tag = Tag::where('slug', $tag_slug)->get('id');
@@ -74,7 +76,7 @@ trait TagsManager
           $item_profile->tags()->attach($tag[0]->id);
         } else {
           $tag = new Tag;
-          $tag->name = $tag_item;
+          $tag->name = $tag_name;
           $tag->slug = $tag_slug;
           $tag->save();
 

@@ -21,7 +21,7 @@ class SocialSeeder extends Seeder
 
       for ($i = 0; $i < $num_socials; $i++) {
         DB::table('socials')->insert(array(
-          'link' => $faker->url,
+          'link' => $faker->unique()->url,
           'profile_id' => $profile->id,
         ));
       }

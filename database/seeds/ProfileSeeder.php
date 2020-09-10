@@ -34,9 +34,9 @@ class ProfileSeeder extends Seeder
     }
 
     foreach ($profiles as $profile) {
-      $category_rand = array_rand(array_flip($category_arr), 3);
-      $tag_rand = array_rand(array_flip($tag_arr), 7);
-      $phone_rand = array_rand(array_flip($phone_arr), 2);
+      $category_rand = array_rand(array_flip($category_arr), rand(2, 5));
+      $tag_rand = array_rand(array_flip($tag_arr), rand(3, 7));
+      $phone_rand = array_rand(array_flip($phone_arr), rand(2, 4));
 
       foreach ($category_rand as $category_item) {
         $profile->categories()->attach($category_item);

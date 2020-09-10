@@ -14,31 +14,43 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//   return $request->user();
-// });
-
 Route::middleware(['api'])->group(function ($router) {
   // Route::group(['v1'], function () {
-    Route::post('login', 'AuthController@login');
-    Route::post('logout', 'AuthController@logout');
-    Route::post('refresh', 'AuthController@refresh');
-    Route::get('me', 'AuthController@me')->middleware('log.route');
+  Route::post('login', 'AuthController@login');
+  Route::post('logout', 'AuthController@logout');
+  Route::post('refresh', 'AuthController@refresh');
+  Route::get('me', 'AuthController@me')->middleware('log.route');
 
-    Route::post('register', 'RegistrationController@register');
-    Route::get('email/verify/{id}', 'VerificationController@verify')->name('verification.verify');
-    Route::get('email/resend', 'VerificationController@resend')->name('verification.resend');
-    Route::post('password/email', 'ForgotPasswordController@forgot');
-    Route::post('password/reset', 'ForgotPasswordController@reset');
+  Route::post('register', 'RegistrationController@register');
+  Route::get('email/verify/{id}', 'VerificationController@verify')->name('verification.verify');
+  Route::get('email/resend', 'VerificationController@resend')->name('verification.resend');
+  Route::post('password/email', 'ForgotPasswordController@forgot');
+  Route::post('password/reset', 'ForgotPasswordController@reset');
 
-    Route::patch('user/profile', 'UserController@updateProfile');
-    Route::get('users', 'UserController@getUsers');
+  Route::patch('user/profile', 'UserController@updateProfile');
+  Route::get('users', 'UserController@getUsers');
 
-    Route::post('images', 'PictureController@store');
+  Route::resource('images', 'PictureController@store')->only([
+    'store'
+  ]);;
 
-    // Route::post('social', 'SocialController@store');
-    Route::resource('profiles', 'ProfileController')->except([
-      'create', 'edit'
-    ]);
+  Route::resource('profiles', 'ProfileController')->except([
+    'create', 'edit'
+  ]);
+
+  Route::resource('categories', 'CategoryController')->only([
+    'index', 'show'
+  ]);
+
+  Route::resource('tags', 'TagController')->only([
+    'index', 'show'
+  ]);
+
+  Route::get('comments/{slug}', 'CommentController@index');
+  Route::post('comments/{slug}', 'CommentController@store');
+
+  // Route::resource('comments', 'CommentController')->except([
+  //   'index', 'create', 'edit', 'store'
+  // ]);
   // });
 });

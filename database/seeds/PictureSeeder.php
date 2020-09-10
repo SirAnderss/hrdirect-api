@@ -17,9 +17,10 @@ class PictureSeeder extends Seeder
     // factory(\App\Picture::class, 300)->create();
 
     $profiles = App\Profile::all();
-    $num_images = rand(3, 6);
 
     foreach ($profiles as $profile) {
+      $num_images = rand(3, 6);
+
       DB::table('pictures')->insert(array(
         0 =>
         array(

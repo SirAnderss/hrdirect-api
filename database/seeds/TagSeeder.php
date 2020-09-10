@@ -4,13 +4,13 @@ use Illuminate\Database\Seeder;
 
 class TagSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-      factory(\App\Tag::class, 300)->create();
-    }
+  /**
+   * Run the database seeds.
+   *
+   * @return void
+   */
+  public function run()
+  {
+    factory(\App\Tag::class, 300)->create();
+  }
 }

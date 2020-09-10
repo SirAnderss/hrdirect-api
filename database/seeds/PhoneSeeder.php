@@ -4,13 +4,13 @@ use Illuminate\Database\Seeder;
 
 class PhoneSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-      factory(\App\Phone::class, 150)->create();
-    }
+  /**
+   * Run the database seeds.
+   *
+   * @return void
+   */
+  public function run()
+  {
+    factory(\App\Phone::class, 450)->create();
+  }
 }

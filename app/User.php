@@ -25,14 +25,6 @@ class User extends Authenticatable implements JWTSubject
   }
 
   /**
-   * Get the acceptances for the user.
-   */
-  public function acceptances()
-  {
-    return $this->hasMany('App\Acceptance');
-  }
-
-  /**
    * Get the comments for the user.
    */
   public function comments()

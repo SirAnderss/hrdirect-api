@@ -38,14 +38,6 @@ class Profile extends Model
   }
 
   /**
-   * Get the acceptances for the profile.
-   */
-  public function acceptances()
-  {
-    return $this->hasMany('App\Acceptance');
-  }
-
-  /**
    * Get the comments for the profile.
    */
   public function comments()

@@ -11,7 +11,8 @@ trait CategoriesManager
   {
     try {
       foreach ($categories as $key => $category_item) {
-        $category_slug = Str::slug($category_item, '-');
+        $category_name = Str::of($category_item)->trim();
+        $category_slug = Str::slug($category_name, '-');
 
         if (Category::where('slug', $category_slug)->exists()) {
           $category = Category::where('slug', $category_slug)->get('id');
@@ -19,7 +20,7 @@ trait CategoriesManager
           $item_profile->categories()->attach($category[0]->id);
         } else {
           $category = new Category;
-          $category->name = $category_item;
+          $category->name = Str::lower($category_name);;
           $category->slug = $category_slug;
           $category->save();
 
@@ -65,7 +66,8 @@ trait CategoriesManager
 
       // Insert new categories
       foreach ($categories_to_insert as $key => $category_item) {
-        $category_slug = Str::slug($category_item, '-');
+        $category_name = Str::of($category_item)->trim();
+        $category_slug = Str::slug($category_name, '-');
 
         if (Category::where('slug', $category_slug)->exists()) {
           $category = Category::where('slug', $category_slug)->get('id');
@@ -73,7 +75,7 @@ trait CategoriesManager
           $item_profile->categories()->attach($category[0]->id);
         } else {
           $category = new Category;
-          $category->name = $category_item;
+          $category->name = $category_name;
           $category->slug = $category_slug;
           $category->save();
 
