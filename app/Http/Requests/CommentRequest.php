@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Support\Arr;
+
 use Illuminate\Foundation\Http\FormRequest;
+
+use function GuzzleHttp\json_decode;
 
 class CommentRequest extends FormRequest
 {
@@ -13,6 +17,7 @@ class CommentRequest extends FormRequest
    */
   public function authorize()
   {
+    // Validar que el usuario sea el mismo que creo el item
     return true;
   }
 
@@ -23,10 +28,18 @@ class CommentRequest extends FormRequest
    */
   public function rules()
   {
-    // dd($this->validationData());
-    return [
-      'comment' => 'string|min:8|max:300',
-      'rating' => 'integer|between:1,5'
-    ];
+    $contains = $this->validationData();
+    $contains = Arr::hasAny($contains, ['comment', 'rating']);
+
+    if ($contains) {
+      return [
+        'comment' => 'nullable|string|min:8|max:300',
+        'rating' => 'nullable|integer|between:1,5'
+      ];
+    } else {
+      return [
+        'inputs' => 'required'
+      ];
+    }
   }
 }

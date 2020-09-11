@@ -27,19 +27,19 @@ trait CommentManager
       $star[4] = Comment::where('profile_id', $id)->where('rating', 4)->count();
       $star[5] = Comment::where('profile_id', $id)->where('rating', 5)->count();
 
-      $comments = Comment::join('users', 'users.id', '=', 'comments.user_id')
-        ->select(
-          'comments.id',
-          'comments.comment',
-          'comments.rating',
-          'comments.user_id',
-          'users.name as username'
-        )
-        ->where('profile_id', $id)
-        ->orderBy('comments.updated_at', 'desc')
-        ->paginate(10);
+      // $comments = Comment::join('users', 'users.id', '=', 'comments.user_id')
+      //   ->select(
+      //     'comments.id',
+      //     'comments.comment',
+      //     'comments.rating',
+      //     'comments.user_id',
+      //     'users.name as username'
+      //   )
+      //   ->where('profile_id', $id)
+      //   ->orderBy('comments.updated_at', 'desc')
+      //   ->paginate(10);
 
-      if (!empty($comments)) {
+      if (!empty($avg)) {
         return [
           'star_1' => $star[1],
           'star_2' => $star[2],
@@ -47,10 +47,10 @@ trait CommentManager
           'star_4' => $star[4],
           'star_5' => $star[5],
           'avg' => $avg[0]->avg_rating,
-          'comments' => $comments
+          // 'comments' => $comments
         ];
       } else {
-        return 'No comments found';
+        return 'No califications found';
       }
     } catch (\Throwable $th) {
       return $this->respondBadRequest(ApiCode::BAD_REQUEST); // Revisar
@@ -80,7 +80,7 @@ trait CommentManager
         $temp = $temp + $value->rating;
       }
 
-      $avg = $temp / ($count + 1);
+      $avg = $temp / ($count);
 
       return $avg;
     }

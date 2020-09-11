@@ -49,8 +49,8 @@ Route::middleware(['api'])->group(function ($router) {
   Route::get('comments/{slug}', 'CommentController@index');
   Route::post('comments/{slug}', 'CommentController@store');
 
-  // Route::resource('comments', 'CommentController')->except([
-  //   'index', 'create', 'edit', 'store'
-  // ]);
+  Route::resource('comments', 'CommentController')->only([
+    'update', 'destroy'
+  ]);
   // });
 });
