@@ -22,43 +22,51 @@ class RoleSeeder extends Seeder
       1 =>
       array(
         'id' => Str::uuid(),
-        'name' => 'PRIME',
+        'name' => 'MANAGER',
       ),
       2 =>
       array(
         'id' => Str::uuid(),
-        'name' => 'PARTNER',
+        'name' => 'VERIFIED',
       ),
       3 =>
       array(
         'id' => Str::uuid(),
-        'name' => 'SUBCRIBER',
+        'name' => 'PARTNER',
       ),
       4 =>
       array(
         'id' => Str::uuid(),
-        'name' => 'VERIFIED',
+        'name' => 'PRIME',
       ),
       5 =>
+      array(
+        'id' => Str::uuid(),
+        'name' => 'SUBCRIBER',
+      ),
+      6 =>
       array(
         'id' => Str::uuid(),
         'name' => 'REGISTERED',
       ),
     ));
 
-    $roles = App\Role::all();
     $users = App\User::all();
-    $arr = array();
 
-    foreach ($roles as $role) {
-      array_push($arr, $role->id);
-    }
+    if (count($users) > 0) {
+      $roles = App\Role::all();
+      $arr = array();
 
-    foreach ($users as $user) {
-      $rand = array_rand(array_flip($arr), 3);
+      foreach ($roles as $role) {
+        array_push($arr, $role->id);
+      }
 
-      foreach ($rand as $item) {
-        $user->roles()->attach($item);
+      foreach ($users as $user) {
+        $rand = array_rand(array_flip($arr), 3);
+
+        foreach ($rand as $item) {
+          $user->roles()->attach($item);
+        }
       }
     }
   }

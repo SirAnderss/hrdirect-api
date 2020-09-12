@@ -2,11 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Comment;
 use Illuminate\Support\Arr;
 
 use Illuminate\Foundation\Http\FormRequest;
-
-use function GuzzleHttp\json_decode;
 
 class CommentRequest extends FormRequest
 {
@@ -17,7 +16,7 @@ class CommentRequest extends FormRequest
    */
   public function authorize()
   {
-    // Validar que el usuario sea el mismo que creo el item
+    // // Validar que el usuario sea el mismo que creo el item
     return true;
   }
 

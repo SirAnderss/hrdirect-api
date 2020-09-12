@@ -65,7 +65,11 @@ trait FileUpload
   private function storeFileName($file_name, $type, $id)
   {
 
-    Picture::create(['picture_link' => $file_name, 'picture_type_id' => $type, 'profile_id' => $id]);
+    Picture::create([
+      'picture_link' => url('storage/images/') . '/' . $file_name,
+      'picture_type_id' => $type,
+      'profile_id' => $id
+    ]);
 
     return 'Success';
   }
@@ -126,8 +130,17 @@ trait FileUpload
   protected function staticProfile($profile_id)
   {
     try {
-      Picture::create(['picture_link' => 'avatar.webp', 'picture_type_id' => 1, 'profile_id' => $profile_id]);
-      Picture::create(['picture_link' => 'thumb_avatar.webp', 'picture_type_id' => 5, 'profile_id' => $profile_id]);
+      Picture::create([
+        'picture_link' =>  url('storage/images/') . '/' . 'avatar.webp',
+        'picture_type_id' => 1,
+        'profile_id' => $profile_id
+      ]);
+
+      Picture::create([
+        'picture_link' =>  url('storage/images/') . '/' . 'thumb_avatar.webp',
+        'picture_type_id' => 5,
+        'profile_id' => $profile_id
+      ]);
 
       return 'Success';
     } catch (\Throwable $th) {
@@ -137,7 +150,7 @@ trait FileUpload
   }
 
   /**
-   * Set default avatar
+   * Content images manager
    */
   protected function contentImage($type, $name, $id)
   {
@@ -199,7 +212,7 @@ trait FileUpload
   }
 
   /**
-   * Set default avatar
+   * Remove image from storage
    */
   protected function deleteImage($type, $name)
   {
