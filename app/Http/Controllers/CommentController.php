@@ -17,7 +17,7 @@ class CommentController extends Controller
 
   public function __construct()
   {
-  $this->middleware('auth:api');
+    $this->middleware('auth:api');
   }
 
   /**
@@ -28,22 +28,31 @@ class CommentController extends Controller
    */
   public function store($slug, CommentRequest $request)
   {
-    $profile = Profile::where('slug', $slug)->get('id');
+    try {
+      $profile = Profile::where('slug', $slug)->get('id');
 
-    $comment = new Comment;
-    // $comment->comment = $request->comment;
-    $comment->rating = $request->rating;
-    $comment->profile_id = $profile[0]->id;
-    $comment->user_id = Auth::user()->id;
-    $comment->save();
+      if (!Comment::where('user_id', Auth::user()->id)->exists()) {
+        $comment = new Comment;
+        // $comment->comment = $request->comment;
+        $comment->rating = $request->rating;
+        $comment->profile_id = $profile[0]->id;
+        $comment->user_id = Auth::user()->id;
+        $comment->save();
 
-    $avg = $this->calcAvg($profile[0]->id, $request->rating);
+        $avg = $this->calcAvg($profile[0]->id, $request->rating);
 
-    $comment = Comment::find($comment->id);
-    $comment->avg_rating = $avg;
-    $comment->save();
+        $comment = Comment::find($comment->id);
+        $comment->avg_rating = $avg;
+        $comment->save();
 
-    return $this->$this->respondWithMessage(ApiCode::OK, 'Calification saved succesfully');
+        return $this->respondWithMessage(ApiCode::OK, 'Calification saved succesfully');
+      } else {
+        return $this->respondWithMessage(ApiCode::ALREADY_EXISTS, 'User can´t qualify again');
+      }
+    } catch (\Throwable $th) {
+      return $this->respondBadRequest(ApiCode::BAD_REQUEST);
+      // throw $th;
+    }
   }
 
   /**

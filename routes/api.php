@@ -28,7 +28,7 @@ Route::middleware(['api'])->group(function ($router) {
   Route::post('password/reset', 'ForgotPasswordController@reset');
 
   Route::patch('user/profile', 'UserController@updateProfile');
-  Route::get('users', 'UserController@getUsers');
+  // Route::get('users', 'UserController@getUsers');
 
   Route::resource('images', 'PictureController@store')->only([
     'store'
@@ -46,11 +46,11 @@ Route::middleware(['api'])->group(function ($router) {
     'index', 'show'
   ]);
 
-  Route::get('comments/{slug}', 'CommentController@index');
   Route::post('comments/{slug}', 'CommentController@store');
 
   Route::resource('comments', 'CommentController')->only([
-    'update', 'destroy'
+    /*'update', */
+    'destroy'
   ]);
   // });
 });
