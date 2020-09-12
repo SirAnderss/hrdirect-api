@@ -51,9 +51,9 @@ class RoleSeeder extends Seeder
       ),
     ));
 
-    $users = App\User::all();
 
-    if (count($users) > 0) {
+    if (App\User::count() > 0) {
+      $users = App\User::all();
       $roles = App\Role::all();
       $arr = array();
 
